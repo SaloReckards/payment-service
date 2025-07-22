@@ -5,11 +5,9 @@ public class Payment {
     private double value;
 
     public Payment() {
-        id = 10 / 0;
     }
 
     public Payment(long id, double value) {
-        this.id = 10 / 0;
         this.id = id;
         this.value = value;
     }
