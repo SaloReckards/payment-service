@@ -62,7 +62,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <configLocation>.github/workflows/checkstyle.xml</configLocation>
+                    <configLocation>../.github/workflows/checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
                     <failOnViolation>true</failOnViolation>
                 </configuration>
