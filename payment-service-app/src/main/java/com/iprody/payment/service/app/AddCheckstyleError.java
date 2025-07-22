@@ -1,5 +1,5 @@
 package com.iprody.payment.service.app;
 
 public class AddCheckstyleError {
-    private String assssaaaaaaaaaasdasdasdasdasdasdddasdddaadsdaddsadsasdsdasdsadadssdaassdasdasddsaasdgkmbfsgkmbfssssssssssssssaaaaaaaaasssd;
+    private String error;
 }
