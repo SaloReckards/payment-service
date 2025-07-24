@@ -1,32 +1,36 @@
 package com.iprody.payment.service.app.controller;
 
-import com.iprody.payment.service.app.model.Payment;
+import com.iprody.payment.service.app.persistence.entity.Payment;
+import com.iprody.payment.service.app.persistency.PaymentRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.OffsetDateTime;
+import java.util.*;
 
 @RestController
 @RequestMapping("/payments")
 public class PaymentController {
-    private final Map<Long, Payment> payments = new HashMap<>();
+    private PaymentRepository repository;
 
-    public PaymentController() {
-        payments.put(1L, new Payment(1L, 100));
-        payments.put(2L, new Payment(2L, 200));
-        payments.put(3L, new Payment(3L, 300));
-        payments.put(4L, new Payment(4L, 400));
-        payments.put(5L, new Payment(5L, 500));
+    public PaymentController(PaymentRepository repository) {
+        this.repository = repository;
+    }
+
+    @GetMapping("/{guid}")
+    public Payment getPayments(@PathVariable UUID guid) {
+        return repository.findById(guid).orElse(null);
     }
 
     @GetMapping
     public List<Payment> getAllPayments() {
-        return new ArrayList<>(payments.values());
+        return repository.findAll();
     }
-    @GetMapping("/{id}")
-    public Payment getPayment(@PathVariable long id) {
-        return payments.get(id);
+
+    @PostMapping
+    public Payment createPayment(@RequestBody Payment payment) {
+        payment.setGuid(UUID.randomUUID());
+        payment.setCreatedAt(OffsetDateTime.now());
+        payment.setUpdatedAt(OffsetDateTime.now());
+        return repository.save(payment);
     }
 }
