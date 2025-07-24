@@ -1,7 +1,7 @@
 package com.iprody.payment.service.app.persistency;
 
-import com.iprody.payment.service.app.persistance.entity.Payment;
-import com.iprody.payment.service.app.persistance.entity.PaymentStatus;
+import com.iprody.payment.service.app.persistence.entity.Payment;
+import com.iprody.payment.service.app.persistence.entity.PaymentStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
