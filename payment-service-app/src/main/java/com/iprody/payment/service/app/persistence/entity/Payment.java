@@ -1,4 +1,4 @@
-package com.iprody.payment.service.app.persistance.entity;
+package com.iprody.payment.service.app.persistence.entity;
 
 import jakarta.persistence.*;
 
