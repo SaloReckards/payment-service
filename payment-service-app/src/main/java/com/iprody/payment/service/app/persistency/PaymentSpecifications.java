@@ -1,7 +1,7 @@
 package com.iprody.payment.service.app.persistency;
 
-import com.iprody.payment.service.app.persistence.entity.Payment;
-import com.iprody.payment.service.app.persistence.entity.PaymentStatus;
+import com.iprody.payment.service.app.persistency.entity.Payment;
+import com.iprody.payment.service.app.persistency.entity.PaymentStatus;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;

@@ -1,7 +1,7 @@
 package com.iprody.payment.service.app.mapper;
 
 import com.iprody.payment.service.app.dto.PaymentDto;
-import com.iprody.payment.service.app.persistence.entity.Payment;
+import com.iprody.payment.service.app.persistency.entity.Payment;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

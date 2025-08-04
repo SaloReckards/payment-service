@@ -1,6 +1,6 @@
 package com.iprody.payment.service.app.persistency;
 
-import com.iprody.payment.service.app.persistence.entity.Payment;
+import com.iprody.payment.service.app.persistency.entity.Payment;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 

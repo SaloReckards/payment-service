@@ -1,6 +1,6 @@
 package com.iprody.payment.service.app.dto;
 
-import com.iprody.payment.service.app.persistence.entity.PaymentStatus;
+import com.iprody.payment.service.app.persistency.entity.PaymentStatus;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;

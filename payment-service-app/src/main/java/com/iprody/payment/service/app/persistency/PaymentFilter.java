@@ -1,7 +1,6 @@
 package com.iprody.payment.service.app.persistency;
 
-import ch.qos.logback.core.status.Status;
-import com.iprody.payment.service.app.persistence.entity.PaymentStatus;
+import com.iprody.payment.service.app.persistency.entity.PaymentStatus;
 
 import java.math.BigDecimal;
 import java.time.Instant;

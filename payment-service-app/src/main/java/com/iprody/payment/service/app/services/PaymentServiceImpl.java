@@ -2,7 +2,7 @@ package com.iprody.payment.service.app.services;
 
 import com.iprody.payment.service.app.dto.PaymentDto;
 import com.iprody.payment.service.app.mapper.PaymentMapper;
-import com.iprody.payment.service.app.persistence.entity.Payment;
+import com.iprody.payment.service.app.persistency.entity.Payment;
 import com.iprody.payment.service.app.persistency.PaymentFilter;
 import com.iprody.payment.service.app.persistency.PaymentFilterFactory;
 import com.iprody.payment.service.app.persistency.PaymentRepository;
