@@ -1,4 +1,4 @@
-package com.iprody.payment.service.app.services;
+package com.iprody.payment.service.app.service;
 
 import com.iprody.payment.service.app.dto.PaymentDto;
 import com.iprody.payment.service.app.mapper.PaymentMapper;

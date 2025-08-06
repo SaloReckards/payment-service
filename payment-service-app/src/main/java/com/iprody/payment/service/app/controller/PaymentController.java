@@ -2,7 +2,7 @@ package com.iprody.payment.service.app.controller;
 
 import com.iprody.payment.service.app.dto.PaymentDto;
 import com.iprody.payment.service.app.persistency.PaymentFilter;
-import com.iprody.payment.service.app.services.PaymentService;
+import com.iprody.payment.service.app.service.PaymentService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
