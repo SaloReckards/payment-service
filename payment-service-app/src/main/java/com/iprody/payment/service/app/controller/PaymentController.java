@@ -1,34 +1,67 @@
 package com.iprody.payment.service.app.controller;
 
 import com.iprody.payment.service.app.dto.PaymentDto;
+import com.iprody.payment.service.app.dto.PaymentNoteUpdateDto;
+import com.iprody.payment.service.app.dto.PaymentStatusUpdateDto;
 import com.iprody.payment.service.app.persistency.PaymentFilter;
-import com.iprody.payment.service.app.service.PaymentService;
+import com.iprody.payment.service.app.service.PaymentServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/payments")
-public class PaymentController {
-    private final PaymentService paymentService;
+import java.util.UUID;
 
-    public PaymentController(PaymentService paymentService) {
-        this.paymentService = paymentService;
+@RestController
+@RequestMapping("/payments")
+public class PaymentController {
+
+    private final PaymentServiceImpl paymentServiceImpl;
+
+    public PaymentController(PaymentServiceImpl paymentServiceImpl) {
+        this.paymentServiceImpl = paymentServiceImpl;
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public PaymentDto create(@RequestBody PaymentDto paymentDto) {
+        return paymentServiceImpl.create(paymentDto);
+    }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public PaymentDto get(@PathVariable UUID id) {
+        return paymentServiceImpl.get(id);
     }
 
     @GetMapping("/search")
-    public Page<PaymentDto> searchPayments(@ModelAttribute PaymentFilter filter,
-                                           @RequestParam(defaultValue = "0") int page,
-                                           @RequestParam(defaultValue = "25") int size,
-                                           @RequestParam(defaultValue = "createdAt") String sortBy,
-                                           @RequestParam(defaultValue = "desc") String direction) {
-        Sort sort = direction.equalsIgnoreCase("desc")
-                ? Sort.by(sortBy).descending()
-                : Sort.by(sortBy).ascending();
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return paymentService.search(filter, pageable);
+    @ResponseStatus(HttpStatus.OK)
+    public Page<PaymentDto> search(PaymentFilter filter, Pageable pageable) {
+        return paymentServiceImpl.search(filter, pageable);
     }
 
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public PaymentDto update(@PathVariable UUID id, @RequestBody PaymentDto paymentDto) {
+        return paymentServiceImpl.update(id, paymentDto);
+    }
+
+    @PatchMapping("/{id}/status")
+    @ResponseStatus(HttpStatus.OK)
+    public PaymentDto updateStatus(@PathVariable UUID id, @RequestBody @Valid PaymentStatusUpdateDto dto) {
+        return paymentServiceImpl.updateStatus(id, dto.getStatus());
+    }
+
+    @PatchMapping("/{id}/note")
+    @ResponseStatus(HttpStatus.OK)
+    public PaymentDto updateNote(@PathVariable UUID id, @RequestBody @Valid PaymentNoteUpdateDto dto) {
+        return paymentServiceImpl.updateNote(id, dto.getNote());
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable UUID id) {
+        paymentServiceImpl.delete(id);
+    }
 }

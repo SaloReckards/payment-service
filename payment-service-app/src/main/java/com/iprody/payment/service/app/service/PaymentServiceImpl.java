@@ -6,12 +6,14 @@ import com.iprody.payment.service.app.persistency.entity.Payment;
 import com.iprody.payment.service.app.persistency.PaymentFilter;
 import com.iprody.payment.service.app.persistency.PaymentFilterFactory;
 import com.iprody.payment.service.app.persistency.PaymentRepository;
+import com.iprody.payment.service.app.persistency.entity.PaymentStatus;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Service
@@ -25,9 +27,19 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    public PaymentDto create(PaymentDto dto) {
+        Payment entity = mapper.toEntity(dto);
+        entity.setGuid(null);
+        entity.setCreatedAt(OffsetDateTime.now());
+        entity.setUpdatedAt(OffsetDateTime.now());
+        Payment saved = repository.save(entity);
+        return mapper.toDto(saved);
+    }
+
+    @Override
     public PaymentDto get(UUID id) {
         return repository.findById(id).map(mapper::toDto).orElseThrow(()
-                -> new EntityNotFoundException("Платеж не найден " + id));
+                -> new IllegalArgumentException("Платеж не найден " + id));
     }
 
     @Override
@@ -35,5 +47,42 @@ public class PaymentServiceImpl implements PaymentService {
         Specification<Payment> spec = PaymentFilterFactory.fromFilter(filter);
         Page<Payment> page = repository.findAll(spec, pageable);
         return page.map(mapper::toDto);
+    }
+
+    @Override
+    public PaymentDto update(UUID id, PaymentDto dto) {
+        Payment existing = repository.findById(id).orElseThrow(()
+                -> new EntityNotFoundException("Платеж не найден " + id));
+
+        Payment updated = mapper.toEntity(dto);
+        updated.setGuid(id);
+        Payment saved = repository.save(updated);
+        return mapper.toDto(saved);
+    }
+
+    @Override
+    public PaymentDto updateStatus(UUID id, PaymentStatus status) {
+        Payment existing = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Платеж не найден: " + id));
+        existing.setStatus(status);
+        Payment saved = repository.save(existing);
+        return mapper.toDto(saved);
+    }
+
+    @Override
+    public PaymentDto updateNote(UUID id, String note) {
+        Payment payment = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Платеж не найден: " + id));
+        payment.setNote(note);
+        Payment saved = repository.save(payment);
+        return mapper.toDto(saved);
+    }
+
+    @Override
+    public void delete(UUID id) {
+        if (!repository.existsById(id)) {
+            throw new EntityNotFoundException("Платеж не найден " + id);
+        }
+        repository.deleteById(id);
     }
 }

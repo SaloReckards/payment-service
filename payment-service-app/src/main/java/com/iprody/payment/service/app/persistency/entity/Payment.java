@@ -11,6 +11,7 @@ import java.util.UUID;
 public class Payment {
 
     @Id
+    @GeneratedValue(generator = "UUID")
     @Column(nullable = false, unique = true)
     private UUID guid;
 
