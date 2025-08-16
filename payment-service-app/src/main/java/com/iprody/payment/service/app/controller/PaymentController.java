@@ -70,6 +70,6 @@ public class PaymentController {
     @ExceptionHandler(EntityNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorDto handleNotFound(EntityNotFoundException ex) {
-        return new ErrorDto(HttpStatus.NOT_FOUND.value(), ex.getMessage(), ex.getOperation(), ex.getEntityid());
+        return new ErrorDto(HttpStatus.NOT_FOUND.value(), ex.getEntityid(), ex.getOperation(), ex.getMessage());
     }
 }
