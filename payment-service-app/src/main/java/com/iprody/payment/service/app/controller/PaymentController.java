@@ -3,6 +3,8 @@ package com.iprody.payment.service.app.controller;
 import com.iprody.payment.service.app.dto.PaymentDto;
 import com.iprody.payment.service.app.dto.PaymentNoteUpdateDto;
 import com.iprody.payment.service.app.dto.PaymentStatusUpdateDto;
+import com.iprody.payment.service.app.exception.EntityNotFoundException;
+import com.iprody.payment.service.app.exception.ErrorDto;
 import com.iprody.payment.service.app.persistency.PaymentFilter;
 import com.iprody.payment.service.app.service.PaymentServiceImpl;
 import jakarta.validation.Valid;
@@ -63,5 +65,11 @@ public class PaymentController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable UUID id) {
         paymentServiceImpl.delete(id);
+    }
+
+    @ExceptionHandler(EntityNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorDto handleNotFound(EntityNotFoundException ex) {
+        return new ErrorDto(HttpStatus.NOT_FOUND.value(), ex.getEntityid(), ex.getOperation(), ex.getMessage());
     }
 }
