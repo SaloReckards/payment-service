@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 1.1-insert-demo-payment
-      author: mentor
+      author: sergey
       comment: "Insert demo payment row for development/testing"
       changes:
         - insert:
