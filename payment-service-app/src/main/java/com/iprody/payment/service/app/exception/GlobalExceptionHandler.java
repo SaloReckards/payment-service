@@ -2,6 +2,7 @@ package com.iprody.payment.service.app.exception;
 
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -26,5 +27,11 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorDto handleTypeMismatch(TypeMismatchException ex) {
         return new ErrorDto(HttpStatus.BAD_REQUEST.value(),  null, ex.getMessage(), null);
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorDto handleAuth(AuthorizationDeniedException ex){
+        return new ErrorDto(HttpStatus.FORBIDDEN.value(),  null, ex.getMessage(), null);
     }
 }
