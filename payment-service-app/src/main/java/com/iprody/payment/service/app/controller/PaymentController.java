@@ -8,6 +8,8 @@ import com.iprody.payment.service.app.exception.ErrorDto;
 import com.iprody.payment.service.app.persistency.PaymentFilter;
 import com.iprody.payment.service.app.service.PaymentServiceImpl;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,8 @@ import java.util.UUID;
 @RequestMapping("/payments")
 public class PaymentController {
 
+    private static final Logger log = LoggerFactory.getLogger(PaymentController.class);
+
     private final PaymentServiceImpl paymentServiceImpl;
 
     public PaymentController(PaymentServiceImpl paymentServiceImpl) {
@@ -30,49 +34,69 @@ public class PaymentController {
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('admin')")
     public PaymentDto create(@RequestBody PaymentDto paymentDto) {
-        return paymentServiceImpl.create(paymentDto);
+        log.info("Create payment: {}", paymentDto);
+        PaymentDto created = paymentServiceImpl.create(paymentDto);
+        log.debug("Payment created: {}", created);
+        return created;
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('admin', 'reader')")
     @ResponseStatus(HttpStatus.OK)
     public PaymentDto get(@PathVariable UUID id) {
-        return paymentServiceImpl.get(id);
+        log.info("Get payment by id: {}", id);
+        PaymentDto dtoId = paymentServiceImpl.get(id);
+        log.debug("Sending response PaymentDto: {}", dtoId);
+        return dtoId;
     }
 
     @GetMapping("/search")
     @PreAuthorize("hasAnyRole('admin', 'reader')")
     @ResponseStatus(HttpStatus.OK)
     public Page<PaymentDto> search(PaymentFilter filter, Pageable pageable) {
-        return paymentServiceImpl.search(filter, pageable);
+        log.info("Search payment by filter: {}", filter);
+        Page<PaymentDto> dtoSearch = paymentServiceImpl.search(filter, pageable);
+        log.debug("Sending response PaymentDto: {}", dtoSearch);
+        return dtoSearch;
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('admin')")
     @ResponseStatus(HttpStatus.OK)
     public PaymentDto update(@PathVariable UUID id, @RequestBody PaymentDto paymentDto) {
-        return paymentServiceImpl.update(id, paymentDto);
+        log.info("Update payment: {}", paymentDto);
+        PaymentDto updateDto = paymentServiceImpl.update(id, paymentDto);
+        log.debug("Payment updated: {}", updateDto);
+        return updateDto;
     }
 
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasRole('admin')")
     @ResponseStatus(HttpStatus.OK)
     public PaymentDto updateStatus(@PathVariable UUID id, @RequestBody @Valid PaymentStatusUpdateDto dto) {
-        return paymentServiceImpl.updateStatus(id, dto.getStatus());
+        log.info("Update status payment: {}", dto);
+        PaymentDto updateStatus = paymentServiceImpl.updateStatus(id, dto.getStatus());
+        log.debug("Payment status updated: {}", updateStatus);
+        return updateStatus;
     }
 
     @PatchMapping("/{id}/note")
     @PreAuthorize("hasRole('admin')")
     @ResponseStatus(HttpStatus.OK)
     public PaymentDto updateNote(@PathVariable UUID id, @RequestBody @Valid PaymentNoteUpdateDto dto) {
-        return paymentServiceImpl.updateNote(id, dto.getNote());
+        log.info("Update note payment: {}", dto);
+        PaymentDto updateNote = paymentServiceImpl.updateNote(id, dto.getNote());
+        log.debug("Payment note updated: {}", updateNote);
+        return updateNote;
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasRole('admin')")
     public void delete(@PathVariable UUID id) {
+        log.info("Delete payment: {}", id);
         paymentServiceImpl.delete(id);
+        log.debug("Payment deleted: {}", id);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
