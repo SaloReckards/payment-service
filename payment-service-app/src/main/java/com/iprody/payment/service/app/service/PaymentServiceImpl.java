@@ -1,7 +1,10 @@
 package com.iprody.payment.service.app.service;
 
+import com.iprody.payment.service.app.async.AsyncSender;
+import com.iprody.payment.service.app.async.XPaymentAdapterRequestMessage;
 import com.iprody.payment.service.app.dto.PaymentDto;
 import com.iprody.payment.service.app.mapper.PaymentMapper;
+import com.iprody.payment.service.app.mapper.XPaymentAdapterMapper;
 import com.iprody.payment.service.app.persistency.entity.Payment;
 import com.iprody.payment.service.app.persistency.PaymentFilter;
 import com.iprody.payment.service.app.persistency.PaymentFilterFactory;
@@ -20,10 +23,16 @@ import java.util.UUID;
 public class PaymentServiceImpl implements PaymentService {
     private final PaymentRepository repository;
     private final PaymentMapper mapper;
+    private final XPaymentAdapterMapper xPaymentAdapterMapper;
+    private final AsyncSender<XPaymentAdapterRequestMessage> sender;
 
-    public PaymentServiceImpl(PaymentRepository repository, PaymentMapper mapper) {
+    public PaymentServiceImpl(PaymentRepository repository, PaymentMapper mapper, XPaymentAdapterMapper
+            xPaymentAdapterMapper, AsyncSender<XPaymentAdapterRequestMessage>
+                                      sender) {
         this.repository = repository;
         this.mapper = mapper;
+        this.xPaymentAdapterMapper = xPaymentAdapterMapper;
+        this.sender = sender;
     }
 
     @Override
@@ -33,6 +42,9 @@ public class PaymentServiceImpl implements PaymentService {
         entity.setCreatedAt(OffsetDateTime.now());
         entity.setUpdatedAt(OffsetDateTime.now());
         Payment saved = repository.save(entity);
+        XPaymentAdapterRequestMessage requestMessage =
+                xPaymentAdapterMapper.toXPaymentAdapterRequestMessage(entity);
+        sender.send(requestMessage);
         return mapper.toDto(saved);
     }
 
