@@ -1,8 +1,11 @@
 package com.iprody.payment.service.app.async;
 
 import com.iprody.payment.service.app.persistency.PaymentRepository;
+import com.iprody.payment.service.app.persistency.entity.Payment;
 import com.iprody.payment.service.app.persistency.entity.PaymentStatus;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 
 @Component
@@ -15,19 +18,18 @@ public class XPaymentResponseHandle implements MessageHandler<XPaymentAdapterRes
 
     @Override
     public void handle(XPaymentAdapterResponseMessage message) {
-        paymentRepository.findById(message.getPaymentGuid())
-                .ifPresent(payment -> {
-                    PaymentStatus newStatus = switch (message.getStatus()) {
+        Optional<Payment> paymentOpt = paymentRepository.findById(message.getPaymentGuid());
+        paymentOpt.ifPresent(payment -> {
+            payment.setAmount(message.getAmount());
+            payment.setCurrency(message.getCurrency());
+            payment.setStatus(
+                    switch (message.getStatus()) {
                         case SUCCEEDED -> PaymentStatus.APPROVED;
                         case CANCELED -> PaymentStatus.DECLINED;
-                        case PROCESSING -> PaymentStatus.PENDING;
-                    };
-
-                    payment.setStatus(newStatus);
-                    payment.setTransactionRefId(message.getTransactionRefId());
-                    payment.setUpdatedAt(message.getOccurredAt());
-
-                    paymentRepository.save(payment);
-                });
+                        default -> PaymentStatus.PENDING;
+                    }
+            );
+            paymentRepository.save(payment);
+        });
     }
 }
