@@ -9,6 +9,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface PaymentRepository extends JpaRepository<Payment, UUID>,
-        JpaSpecificationExecutor<Payment>{
+        JpaSpecificationExecutor<Payment> {
     List<Payment> findByStatus(PaymentStatus status);
 }
