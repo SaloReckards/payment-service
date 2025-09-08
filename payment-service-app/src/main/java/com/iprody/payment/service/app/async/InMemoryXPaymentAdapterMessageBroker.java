@@ -40,7 +40,8 @@ public class InMemoryXPaymentAdapterMessageBroker implements AsyncSender<XPaymen
         }, 30, TimeUnit.SECONDS);
     }
 
-    private XPaymentAdapterResponseMessage emit(XPaymentAdapterRequestMessage request, UUID txId, XPaymentAdapterStatus status) {
+    private XPaymentAdapterResponseMessage emit(XPaymentAdapterRequestMessage request,
+                                                UUID txId, XPaymentAdapterStatus status) {
         XPaymentAdapterResponseMessage result = new XPaymentAdapterResponseMessage();
         result.setPaymentGuid(request.getPaymentGuid());
         result.setAmount(request.getAmount());

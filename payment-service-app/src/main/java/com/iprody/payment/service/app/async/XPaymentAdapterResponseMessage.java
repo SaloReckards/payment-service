@@ -15,7 +15,7 @@ public class XPaymentAdapterResponseMessage implements Message {
     private OffsetDateTime occurredAt;                  // Момент времени, когда событие произошло
 
     @Override
-    public UUID getMessageId(){
+    public UUID getMessageId() {
         return messageGuid;
     }
 
