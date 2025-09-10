@@ -189,7 +189,6 @@ public class PaymentControllerIntegrationTest extends AbstractPostgresIntegratio
         dto.setStatus(PaymentStatus.CREATED);
         dto.setCreatedAt(OffsetDateTime.now());
         dto.setUpdatedAt(OffsetDateTime.now());
-        ;
         mockMvc.perform(post("/payments")
                         .with(TestJwtFactory.jwtWithRole("sergey", "admin"))
                         .contentType(MediaType.APPLICATION_JSON)
