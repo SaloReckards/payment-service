@@ -3,6 +3,8 @@ package com.iprody.payment.service.app.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iprody.payment.service.app.AbstractPostgresIntegrationTest;
 import com.iprody.payment.service.app.TestJwtFactory;
+import com.iprody.payment.service.app.async.kafka.KafkaXPaymentAdapterRequestSender;
+import com.iprody.payment.service.app.async.kafka.KafkaXPaymentAdapterResultListenerAdapter;
 import com.iprody.payment.service.app.dto.PaymentDto;
 import com.iprody.payment.service.app.dto.PaymentNoteUpdateDto;
 import com.iprody.payment.service.app.dto.PaymentStatusUpdateDto;
@@ -12,6 +14,7 @@ import com.iprody.payment.service.app.persistency.PaymentRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -34,6 +37,12 @@ public class PaymentControllerIntegrationTest extends AbstractPostgresIntegratio
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @MockBean
+    private KafkaXPaymentAdapterRequestSender kafkaXPaymentAdapterRequestSender;
+
+    @MockBean
+    private KafkaXPaymentAdapterResultListenerAdapter kafkaXPaymentAdapterResultListenerAdapter;
 
     @Test
     void shouldCreatePaymentAndVerifyInDatabase() throws Exception {
@@ -179,7 +188,8 @@ public class PaymentControllerIntegrationTest extends AbstractPostgresIntegratio
         dto.setNote("update note in test mode");
         dto.setStatus(PaymentStatus.CREATED);
         dto.setCreatedAt(OffsetDateTime.now());
-        dto.setUpdatedAt(OffsetDateTime.now());;
+        dto.setUpdatedAt(OffsetDateTime.now());
+        ;
         mockMvc.perform(post("/payments")
                         .with(TestJwtFactory.jwtWithRole("sergey", "admin"))
                         .contentType(MediaType.APPLICATION_JSON)
