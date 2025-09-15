@@ -1,10 +1,10 @@
 version: "3.8"
 
 services:
-  payment-service-app:
-    image: payment-service
-    ports:
-      - "8080:8080"
+  #payment-service-app:
+  #  image: payment-service
+  #  ports:
+  #    - "8080:8080"
 
   postgres:
     image: postgres:16
@@ -38,9 +38,11 @@ services:
       - start-dev
       - --http-port=8080
       - --import-realm
+      - --http-enabled=true
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HTTP_ENABLED: "true"
     ports:
       - "8085:8080"
     volumes:
