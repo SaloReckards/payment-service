@@ -1,6 +1,7 @@
 {
   "realm": "iprody-lms",
   "enabled": true,
+  "sslRequired": "none",
   "clients": [
     {
       "clientId": "basic_client",
@@ -11,7 +12,10 @@
         "http://localhost:8085/*"
       ],
       "standardFlowEnabled": true,
-      "directAccessGrantsEnabled": true
+      "directAccessGrantsEnabled": true,
+      "attributes": {
+        "ssl.required": "none"
+      }
     }
   ],
   "users": [
