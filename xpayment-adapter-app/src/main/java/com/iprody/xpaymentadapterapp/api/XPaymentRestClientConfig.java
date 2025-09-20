@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 @Configuration
 public class XPaymentRestClientConfig {
     @Bean
-    RestTemplate zpaymentRestTemplate(@Value("${app.x-payment-api.client.username}") String username,
+    RestTemplate xpaymentRestTemplate(@Value("${app.x-payment-api.client.username}") String username,
                                       @Value("${app.x-payment-api.client.password}") String password,
                                       @Value("${app.x-payment-api.client.account}") String xPayAccount) {
         RestTemplate rt = new RestTemplate();
@@ -23,7 +23,7 @@ public class XPaymentRestClientConfig {
     }
 
     @Bean
-    ApiClient xpaymentApiClient(@Value("app.xpayment.client.url") String xPaymentUrl,
+    ApiClient xpaymentApiClient(@Value("${app.x-payment-api.client.url}") String xPaymentUrl,
                                 RestTemplate xpaymentRestTemplate) {
         ApiClient apiClient = new ApiClient(xpaymentRestTemplate);
         apiClient.setBasePath(xPaymentUrl);
