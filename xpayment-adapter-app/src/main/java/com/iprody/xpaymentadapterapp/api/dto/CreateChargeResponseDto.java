@@ -1,5 +1,7 @@
 package com.iprody.xpaymentadapterapp.api.dto;
 
+import com.iprody.xpaymentadapterapp.async.XPaymentAdapterStatus;
+
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -7,13 +9,13 @@ public class CreateChargeResponseDto {
     private UUID id;
     private BigDecimal amount;
     private String currency;
-    private String status;
+    private XPaymentAdapterStatus status;
     private String order;
 
     public CreateChargeResponseDto() {
     }
 
-    public CreateChargeResponseDto(UUID id, BigDecimal amount, String currency, String status, String order) {
+    public CreateChargeResponseDto(UUID id, BigDecimal amount, String currency, XPaymentAdapterStatus status, String order) {
         this.id = id;
         this.amount = amount;
         this.currency = currency;
@@ -45,11 +47,11 @@ public class CreateChargeResponseDto {
         this.currency = currency;
     }
 
-    public String getStatus() {
+    public XPaymentAdapterStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(XPaymentAdapterStatus status) {
         this.status = status;
     }
 

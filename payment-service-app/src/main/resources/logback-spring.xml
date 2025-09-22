@@ -31,6 +31,17 @@
             <pattern>${LOG_PATTERN}</pattern>
         </encoder>
     </appender>
+    <!-- Логгеры для Kafka - ограничиваем DEBUG логи -->
+    <logger name="org.apache.kafka" level="WARN"/>
+    <logger name="org.springframework.kafka" level="WARN"/>
+
+    <!-- Более детальная настройка для конкретных шумных классов -->
+    <logger name="org.apache.kafka.clients.NetworkClient" level="ERROR"/>
+    <logger name="org.apache.kafka.clients.FetchSessionHandler" level="ERROR"/>
+    <logger name="org.apache.kafka.clients.consumer.internals.AbstractFetch" level="ERROR"/>
+    <logger name="org.apache.kafka.clients.Metadata" level="WARN"/>
+    <logger name="org.apache.kafka.common.metrics" level="WARN"/>
+    <logger name="org.apache.kafka.common.utils" level="WARN"/>
     <!-- Корневой логгер (root) -->
     <root level="${LOG_LEVEL}">
         <appender-ref ref="STDOUT"/>

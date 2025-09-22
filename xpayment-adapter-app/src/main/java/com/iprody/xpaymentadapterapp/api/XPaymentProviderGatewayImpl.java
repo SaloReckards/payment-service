@@ -33,7 +33,7 @@ public class XPaymentProviderGatewayImpl implements XPaymentProviderGateway {
 
     @Override
     public CreateChargeResponseDto retrieveChargeDto(UUID id) throws RestClientException {
-        ChargeResponse response = defaultApi.retrieveCharge(id);
+        ChargeResponse response = defaultApi.retrieveCharge(UUID.fromString(id.toString()));
         return mapper.toDto(response);
     }
 }
