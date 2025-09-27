@@ -88,6 +88,15 @@
                             <output>${project.build.directory}/generated-sources/openapi</output>
                             <apiPackage>com.iprody.xpaymentapp.api.client</apiPackage>
                             <modelPackage>com.iprody.xpaymentapp.api.model</modelPackage>
+                            <globalProperties>
+                                <apis>true</apis>
+                                <models>true</models>
+                                <supportingFiles>true</supportingFiles>
+                                <modelTests>false</modelTests>
+                                <modelDocs>false</modelDocs>
+                                <apiTests>false</apiTests>
+                                <apiDocs>false</apiDocs>
+                            </globalProperties>
                             <configOptions>
                                 <useTags>true</useTags>
                                 <useJakartaEe>true</useJakartaEe>
