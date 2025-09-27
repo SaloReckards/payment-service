@@ -97,15 +97,6 @@
                             <modelPackage>com.iprody.xpaymentapp.api.model</modelPackage>
                             <generateApiTests>false</generateApiTests>
                             <generateModelTests>false</generateModelTests>
-                            <globalProperties>
-                                <apis>true</apis>
-                                <models>true</models>
-                                <supportingFiles>true</supportingFiles>
-                                <modelTests>false</modelTests>
-                                <modelDocs>false</modelDocs>
-                                <apiTests>false</apiTests>
-                                <apiDocs>false</apiDocs>
-                            </globalProperties>
                             <configOptions>
                                 <useTags>true</useTags>
                                 <useJakartaEe>true</useJakartaEe>
