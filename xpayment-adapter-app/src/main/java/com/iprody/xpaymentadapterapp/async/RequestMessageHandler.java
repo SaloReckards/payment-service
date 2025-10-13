@@ -3,30 +3,31 @@ package com.iprody.xpaymentadapterapp.async;
 import com.iprody.xpaymentadapterapp.api.XPaymentProviderGatewayImpl;
 import com.iprody.xpaymentadapterapp.api.dto.CreateChargeRequestDto;
 import com.iprody.xpaymentadapterapp.api.dto.CreateChargeResponseDto;
+import com.iprody.xpaymentadapterapp.checkstate.PaymentStateCheckRegistrar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 
+import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.UUID;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @Component
 public class RequestMessageHandler implements MessageHandler<XPaymentAdapterRequestMessage> {
     private static final Logger log = LoggerFactory.getLogger(RequestMessageHandler.class);
     private final AsyncSender<XPaymentAdapterResponseMessage> asyncSender;
     private final XPaymentProviderGatewayImpl xPaymentProviderGateway;
-    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private final PaymentStateCheckRegistrar paymentStateCheckRegistrar;
 
     @Autowired
     public RequestMessageHandler(AsyncSender<XPaymentAdapterResponseMessage> asyncSender,
-                                 XPaymentProviderGatewayImpl xPaymentProviderGateway) {
+                                 XPaymentProviderGatewayImpl xPaymentProviderGateway,
+                                 PaymentStateCheckRegistrar paymentStateCheckRegistrar) {
         this.asyncSender = asyncSender;
         this.xPaymentProviderGateway = xPaymentProviderGateway;
+        this.paymentStateCheckRegistrar = paymentStateCheckRegistrar;
     }
 
     @Override
@@ -54,26 +55,13 @@ public class RequestMessageHandler implements MessageHandler<XPaymentAdapterRequ
             asyncSender.send(responseMessage);
 
             UUID providerChargeId = chargeResponse.getId();
+            UUID paymentGuid = message.getPaymentGuid();
+            BigDecimal amount = message.getAmount();
+            String currency = message.getCurrency();
 
-            scheduler.schedule(() -> {
-                try {
-                    CreateChargeResponseDto finalResp = xPaymentProviderGateway.retrieveChargeDto(providerChargeId);
-                    XPaymentAdapterResponseMessage finalMessage = new
-                            XPaymentAdapterResponseMessage();
-                    log.info("Payment request with paymentGuid - {} now have status {}",
-                            message.getPaymentGuid(), finalResp.getStatus());
-                    finalMessage.setPaymentGuid(message.getPaymentGuid());
-                    finalMessage.setAmount(finalResp.getAmount());
-                    finalMessage.setCurrency(finalResp.getCurrency());
-                    finalMessage.setStatus(finalResp.getStatus());
-                    finalMessage.setTransactionRefId(finalResp.getId());
-                    finalMessage.setOccurredAt(OffsetDateTime.now());
-
-                    asyncSender.send(finalMessage);
-                } catch (Exception e) {
-                    log.error("Error retrieving charge for providerChargeId={}", providerChargeId, e);
-                }
-            }, 65, TimeUnit.SECONDS);
+            paymentStateCheckRegistrar.register(providerChargeId, paymentGuid, amount, currency);
+            log.info("Payment registered for status tracking: providerChargeId={}, paymentGuid - {}",
+                    providerChargeId, paymentGuid);
         } catch (
                 RestClientException e) {
             log.error("Error in time of sending payment request with paymentGuid - {}",
